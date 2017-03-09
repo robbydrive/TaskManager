@@ -1,5 +1,5 @@
 [pep8]
-ignore=D,I,C,W
+ignore=D,I
 exclude=.git,client,docs,requirements,mcalendar/contrib
 max_line_length=99
 
