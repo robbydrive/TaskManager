@@ -31,22 +31,22 @@ class Roadmap:
     def __init__(self, tasks=[]):
         self.tasks = tasks
 
-    def add_tasks(self, new_task):
+    def add_task(self, new_task):
         self.tasks.append(new_task)
 
     @property
     def today(self):
-        return [element for element in self.tasks
-                if element.estimate == datetime.date(datetime.now())]
+        return [task for task in self.tasks
+                if task.estimate == datetime.date(datetime.now())]
 
     def filter(self, state):
-        return [element for element in self.tasks
-                if element.state == state]
+        return [task for task in self.tasks
+                if task.state == state]
 
 if __name__ == '__main__':
     roadmap = Roadmap()
     for i in range(3):
         task = Task('task %s' % i, '2017-3-27')
-        roadmap.add_tasks(task)
+        roadmap.add_task(task)
     for k in roadmap.tasks:
         print(k)
