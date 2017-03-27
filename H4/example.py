@@ -28,10 +28,7 @@ class Task:
         self.state = 'ready'
 
     def __str__(self):
-        return '{0} {1} {2} Is failed: {3}'.format(self.title,
-                                                   self.state,
-                                                   self.estimate,
-                                                   self.is_failed)
+        return f'{self.title} {self.state} {self.estimate} Is failed: {self.is_failed}'
 
 
 class Roadmap:
@@ -59,8 +56,7 @@ class Roadmap:
 if __name__ == '__main__':
     roadmap = Roadmap()
     for i in range(3):
-        task = Task('task %s' % i, '2017-3-24')
+        task = Task('task %s' % i, '2017-3-27')
         roadmap.add_tasks(task)
     for k in roadmap.today:
-        print(type(k.remaining))
         print(k)
