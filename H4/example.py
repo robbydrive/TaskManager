@@ -10,7 +10,9 @@ class Task:
     @property
     def remaining(self):
         if self.state == 'in_progress':
-            return self.estimate - datetime.date(datetime.now())
+            delta = str(datetime.date(datetime.now()) - self.estimate)
+            delta = '0' if delta.find('day') == -1 else delta.split()[0]
+            return int(delta)
         else:
             return 0
 

@@ -1,2 +1,3 @@
 py-technoatom/
 .idea/
+**/__pycache__
