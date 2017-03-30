@@ -6,7 +6,6 @@ from example import Task
 class WSGIApplication:
 
     def __init__(self, environment, start_response):
-        print('Get request')
         self.environment = environment
         self.start_response = start_response
         self.headers = [
@@ -29,27 +28,14 @@ class WSGIApplication:
         return tasks
 
     def __iter__(self):
-        print('Wait for response')
+        print(self.__iter__)
         if self.environment.get('PATH_INFO', '/') == '/':
-            self.ok_response()
+            self.start_response('200 OK', self.headers)
+            print('yielding')
             yield '\n'.join([str(task) for task in self.critical_tasks]).encode()
         else:
-            self.not_found_response()
+            self.start_response('404 Not Found', self.headers)
             yield b''
-        print('Done')
-
-    def not_found_response(self):
-        print('Create response')
-        print('Send headers')
-        self.start_response('404 Not Found', self.headers)
-        print('Headers is sent')
-
-    def ok_response(self):
-        print('Create response')
-        print('Send headers')
-        self.start_response('200 OK', self.headers)
-        print('Headers is sent')
-        print('Send body')
 
 
 if __name__ == '__main__':
