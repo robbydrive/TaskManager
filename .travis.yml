@@ -8,7 +8,8 @@ install:
 
 script:
     - pylint TaskManager
-    - pylint H4/*.py
+    - pylint H4/example.py
+    - pylint H4/wsgi.py
 
 sudo: false
 
