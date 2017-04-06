@@ -7,7 +7,8 @@ install:
     - pip install -r requirements/base.txt
 
 script:
-    - pylint TaskManager 
+    - pylint TaskManager
+    - pylint H4/*.py
 
 sudo: false
 

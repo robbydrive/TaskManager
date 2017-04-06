@@ -32,10 +32,10 @@ class WSGIApplication:
         if self.environment.get('PATH_INFO', '/') == '/':
             self.start_response('200 OK', self.headers)
             print('yielding')
-            yield '\n'.join([str(task) for task in self.critical_tasks]).encode()
+            return '\n'.join([str(task) for task in self.critical_tasks]).encode()
         else:
             self.start_response('404 Not Found', self.headers)
-            yield b''
+            yield b'Fucked up'
 
 
 if __name__ == '__main__':
