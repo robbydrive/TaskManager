@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Добавление задач
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="/static/task_form.css">
+
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'add_task' %}" method="post">
+        {% csrf_token %}
+        {% for field in form.visible_fields %}
+            <h3>{{ field.label }}</h3>
+            {{ field }}
+        {% endfor %}
+        <br>
+        <br>
+        <button class="btn" type="submit">Cоздать</button>
+        <br>
+    </form>
+
+    {% if form.non_field_errors|length != 0 %}
+        <h3>Ошибочки</h3>
+        <ul>
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+
+    {% elif form.cleaned_data|length != 0 %}
+        <h3>Успех! Вот, что получилось: </h3>
+
+        {% if sign == 1 %}
+            <h3><span class="critical">Задача: {{ field1 }}</span></h3>
+        {% endif %}
+
+        {% if sign == 0 %}
+            <p>Задача: {{ field1 }}</p>
+        {% endif %}
+
+        <p>Выполнить до {{ field2 }}</p>
+    {% endif %}
+{% endblock %}
