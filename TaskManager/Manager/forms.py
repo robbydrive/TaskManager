@@ -16,12 +16,14 @@ class CreateTask(Form):
         widget=widgets.SelectDateWidget()
     )
 
-    def clean(self):
-        cleaned_data = super().clean()
-        value_title_clean = self.cleaned_data.get('title')
-        value_date_clean = self.cleaned_data.get('estimate')
-        if value_date_clean is not None and value_date_clean < date.today():
-            self.add_error(None, 'Нельзя выполнять задания в прошлом!')
-        if value_title_clean is None:
-            raise ValidationError('Нененене')
-        return cleaned_data
+    def clean_title(self):
+        value = self.cleaned_data.get('title')
+        if value == "" or value is None:
+            raise ValidationError('Title can not be empty', code="Empty title")
+        return value
+
+    def clean_estimate(self):
+        value = self.cleaned_data.get('estimate')
+        if value is None or value < date.today():
+            raise ValidationError('Date is in the past', code="Past date")
+        return value
