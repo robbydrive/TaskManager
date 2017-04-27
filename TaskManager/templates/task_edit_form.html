@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Редактирование задачи
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="/static/task_form.css">
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'edit_task' task_title=task_title %}" method="post">
+        {% csrf_token %}
+        {% for field in form.visible_fields %}
+            <h3>{{ field.label }}</h3>
+            {{ field }} {{ field.errors | join:"; " }}
+        {% endfor %}
+        <br>
+        <br>
+        <button class="btn" type="submit">Сохранить</button>
+        <br>
+    </form>
+
+    {% if form.errors|length == 0 and form.is_valid and request.method == "POST" %}
+        <h3>Успех! Вот, что получилось: </h3>
+        <p><span {% if isCritical %}class="critical"{% endif %}>Задача: {{ form.cleaned_data.title }}</span></p>
+        <p>Выполнить до {{ form.cleaned_data.estimate }}</p>
+        <a href="{% url 'index' %}">Вернуться на главную</a>
+    {% endif %}
+{% endblock %}

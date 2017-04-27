@@ -4,5 +4,37 @@
 {% endblock %}
 {% block content %}
     Здравствуйте, здравствуйте!
+    <br>
+    Ваши задачи:
+    <table>
+        <thead>
+            <th>
+                Название
+            </th>
+            <th>
+                Дедлайн
+            </th>
+            <th>
+                Статус
+            </th>
+            <th>
+            </th>
+        </thead>
+    {% for task in existing_data %}
+        <tr>
+            <td>
+                {{ task.title }}
+            </td>
+            <td>
+                {{ task.estimate }}
+            </td>
+            <td>
+                {{ task.state }}
+            </td>
+            <td>
+                <a href="/edit/{{ task.title }}">Отредактировать</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
 {% endblock %}
-</html>

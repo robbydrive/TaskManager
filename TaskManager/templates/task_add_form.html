@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% load static %}
 
 {% block title %}
@@ -8,7 +7,6 @@
 
 {% block styles %}
     <link rel="stylesheet" type="text/css" href="/static/task_form.css">
-
 {% endblock %}
 
 {% block content %}
@@ -17,29 +15,17 @@
         {% for field in form.visible_fields %}
             <h3>{{ field.label }}</h3>
             {{ field }} {{ field.errors | join:"; " }}
-{#            {% if field.errors|length != 0 %}#}
-{#                {%  for error in field.errors %}#}
-{#                    {{ error }}#}
-{#                {%  endfor %}#}
-{#            {% endif %}#}
         {% endfor %}
         <br>
         <br>
-        <button class="btn" type="submit">Cоздать</button>
+        <button class="btn" type="submit">Сохранить</button>
         <br>
     </form>
 
-    {% if form.errors|length == 0 %}
+    {% if form.errors|length == 0 and form.is_valid %}
         <h3>Успех! Вот, что получилось: </h3>
-
-        {% if sign == 1 %}
-            <h3><span class="critical">Задача: {{ field1 }}</span></h3>
-        {% endif %}
-
-        {% if sign == 0 %}
-            <p>Задача: {{ field1 }}</p>
-        {% endif %}
-
-        <p>Выполнить до {{ field2 }}</p>
+        <p><span {% if isCritical %}class="critical"{% endif %}>Задача: {{ form.cleaned_data.title }}</span></p>
+        <p>Выполнить до {{ form.cleaned_data.estimate }}</p>
+        <a href="{% url 'index' %}">Вернуться на главную</a>
     {% endif %}
 {% endblock %}
