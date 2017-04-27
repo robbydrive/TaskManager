@@ -7,7 +7,7 @@ install:
     - pip install -r requirements/base.txt
 
 script:
-    - pylint TaskManager
+    - pylint TaskManager.TaskManager
 
 sudo: false
 
