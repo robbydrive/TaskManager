@@ -1,7 +1,7 @@
-from django.forms import Form, fields, widgets
-from django.core.exceptions import ValidationError
 from datetime import date
 import re
+from django.forms import Form, fields, widgets
+from django.core.exceptions import ValidationError
 
 
 class CreateTask(Form):
