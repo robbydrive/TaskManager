@@ -19,7 +19,7 @@ class CreateTask(Form):
 
     def clean_title(self):
         value = self.cleaned_data.get('title')
-        if value is None or len(re.sub(r'[ \t]', r'', value)) == 0:
+        if value is None or len(re.sub(r'\s', r'', value)) == 0:
             raise ValidationError('Title can not be empty', code="Empty title")
         return value
 
@@ -43,17 +43,13 @@ class EditTask(Form):
         widget=widgets.SelectDateWidget()
     )
 
-    '''state = fields.CharField(
-        label='Состояние: ',
-        required=True,
-        widget=widgets.Select, choices=('in_progress', 'ready'))
-    )'''
     IN_PROGRESS = 'in_progress'
     READY = 'ready'
     CHOICES = (
-        (IN_PROGRESS, 'in_progress',),
-        (READY, 'ready',)
+        (IN_PROGRESS, 'In progress',),
+        (READY, 'Ready',)
     )
+
     state = fields.ChoiceField(
         label='Состояние: ',
         required=True,
@@ -62,7 +58,7 @@ class EditTask(Form):
 
     def clean_title(self):
         value = self.cleaned_data.get('title')
-        if value is None or len(re.sub(r'[ \t]', r'', value)) == 0:
+        if value is None or len(re.sub(r'\s', r'', value)) == 0:
             raise ValidationError('Title can not be empty', code="Empty title")
         return value
 
