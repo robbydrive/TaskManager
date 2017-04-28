@@ -43,10 +43,21 @@ class EditTask(Form):
         widget=widgets.SelectDateWidget()
     )
 
-    state = fields.CharField(
+    '''state = fields.CharField(
         label='Состояние: ',
         required=True,
-        # widget=widgets.Select(choices=('in_progress', 'ready'))
+        widget=widgets.Select, choices=('in_progress', 'ready'))
+    )'''
+    IN_PROGRESS = 'in_progress'
+    READY = 'ready'
+    CHOICES = (
+        (IN_PROGRESS, 'in_progress',),
+        (READY, 'ready',)
+    )
+    state = fields.ChoiceField(
+        label='Состояние: ',
+        required=True,
+        choices=CHOICES
     )
 
     def clean_title(self):
@@ -63,6 +74,6 @@ class EditTask(Form):
 
     def clean_state(self):
         value = self.cleaned_data.get('state')
-        if value is None or value not in ('in_progress', 'ready'):
+        if value is None or value not in (self.IN_PROGRESS, self.READY):
             raise ValidationError('Wrong state', code="wrong state")
         return value
