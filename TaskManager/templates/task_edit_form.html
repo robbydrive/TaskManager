@@ -10,11 +10,11 @@
 {% endblock %}
 
 {% block content %}
-    <form action="{% url 'edit_task' task_title=task_title %}" method="post">
+    <form action="{% url 'edit_task' task_id=task_id %}" method="post">
         {% csrf_token %}
         {% for field in form.visible_fields %}
             <h3>{{ field.label }}</h3>
-            {{ field }} {{ field.errors | join:"; " }}
+            {{ field.as_widget }} {{ field.errors | join:"; " }}
         {% endfor %}
         <br>
         <br>

@@ -1,21 +1,22 @@
 from datetime import date
 import re
-from django.forms import Form, fields, widgets
+from django.forms import Form, ModelForm, fields, widgets
+from Manager import models
 from django.core.exceptions import ValidationError
 
 
-class CreateTask(Form):
+class TaskCreateForm(ModelForm):
 
-    title = fields.CharField(
-        label='Заголовок: ',
-        required=True, max_length=30,
-    )
-
-    estimate = fields.DateField(
-        label='Cрок выполнения: ',
-        required=True,
-        widget=widgets.SelectDateWidget()
-    )
+    # title = fields.CharField(
+    #     label='Заголовок: ',
+    #     required=True, max_length=30,
+    # )
+    #
+    # estimate = fields.DateField(
+    #     label='Cрок выполнения: ',
+    #     required=True,
+    #     widget=widgets.SelectDateWidget()
+    # )
 
     def clean_title(self):
         value = self.cleaned_data.get('title')
@@ -29,32 +30,32 @@ class CreateTask(Form):
             raise ValidationError('Date is in the past', code="Past date")
         return value
 
+    class Meta:
+        model = models.Task
+        fields = ['title', 'estimate']
+        widgets = {
+            'estimate': widgets.SelectDateWidget(),
+        }
 
-class EditTask(Form):
 
-    title = fields.CharField(
-        label='Заголовок: ',
-        required=True, max_length=30,
-    )
+class TaskEditForm(ModelForm):
 
-    estimate = fields.DateField(
-        label='Cрок выполнения: ',
-        required=True,
-        widget=widgets.SelectDateWidget()
-    )
-
-    IN_PROGRESS = 'in_progress'
-    READY = 'ready'
-    CHOICES = (
-        (IN_PROGRESS, 'In progress',),
-        (READY, 'Ready',)
-    )
-
-    state = fields.ChoiceField(
-        label='Состояние: ',
-        required=True,
-        choices=CHOICES
-    )
+    # title = fields.CharField(
+    #     label='Заголовок: ',
+    #     required=True, max_length=30,
+    # )
+    #
+    # estimate = fields.DateField(
+    #     label='Cрок выполнения: ',
+    #     required=True,
+    #     widget=widgets.SelectDateWidget()
+    # )
+    #
+    # state = fields.ChoiceField(
+    #     label='Состояние: ',
+    #     required=True,
+    #     choices=models.CHOICES
+    # )
 
     def clean_title(self):
         value = self.cleaned_data.get('title')
@@ -70,6 +71,13 @@ class EditTask(Form):
 
     def clean_state(self):
         value = self.cleaned_data.get('state')
-        if value is None or value not in (self.IN_PROGRESS, self.READY):
+        if value is None or value not in (models.IN_PROGRESS, models.READY):
             raise ValidationError('Wrong state', code="wrong state")
         return value
+
+    class Meta:
+        model = models.Task
+        fields = ['title', 'estimate', 'state']
+        widgets = {
+            'estimate': widgets.SelectDateWidget(),
+        }
