@@ -19,11 +19,12 @@ class Roadmap(models.Model):
 class Task(models.Model):
     title = models.CharField(max_length=30)
     estimate = models.DateField()
-    state = models.CharField(max_length=11, choices=CHOICES)
+    state = models.CharField(max_length=11, choices=CHOICES, default=IN_PROGRESS, blank=False)
     roadmap = models.ForeignKey(Roadmap,
                                 on_delete=models.SET_NULL,
                                 blank=True,
                                 null=True,
+                                # limit_choices_to=Q(),
                                )
 
     class Meta:

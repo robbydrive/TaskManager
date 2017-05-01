@@ -107,6 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
+# TO DO: change default time zone OR add localization to critical fields
 
 LANGUAGE_CODE = 'en-us'
 

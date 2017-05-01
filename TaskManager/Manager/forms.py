@@ -1,7 +1,7 @@
 from datetime import date
 import re
-from django.forms import Form, ModelForm, fields, widgets
 from Manager import models
+from django.forms import ModelForm, widgets
 from django.core.exceptions import ValidationError
 
 
@@ -32,7 +32,7 @@ class TaskCreateForm(ModelForm):
 
     class Meta:
         model = models.Task
-        fields = ['title', 'estimate']
+        fields = ['title', 'estimate', 'roadmap']
         widgets = {
             'estimate': widgets.SelectDateWidget(),
         }
