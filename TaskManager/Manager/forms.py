@@ -1,22 +1,11 @@
 from datetime import date
 import re
 from Manager import models
-from django.forms import ModelForm, widgets
+from django.forms import ModelForm, widgets, ModelChoiceField
 from django.core.exceptions import ValidationError
 
 
 class TaskCreateForm(ModelForm):
-
-    # title = fields.CharField(
-    #     label='Заголовок: ',
-    #     required=True, max_length=30,
-    # )
-    #
-    # estimate = fields.DateField(
-    #     label='Cрок выполнения: ',
-    #     required=True,
-    #     widget=widgets.SelectDateWidget()
-    # )
 
     def clean_title(self):
         value = self.cleaned_data.get('title')
@@ -40,23 +29,6 @@ class TaskCreateForm(ModelForm):
 
 class TaskEditForm(ModelForm):
 
-    # title = fields.CharField(
-    #     label='Заголовок: ',
-    #     required=True, max_length=30,
-    # )
-    #
-    # estimate = fields.DateField(
-    #     label='Cрок выполнения: ',
-    #     required=True,
-    #     widget=widgets.SelectDateWidget()
-    # )
-    #
-    # state = fields.ChoiceField(
-    #     label='Состояние: ',
-    #     required=True,
-    #     choices=models.CHOICES
-    # )
-
     def clean_title(self):
         value = self.cleaned_data.get('title')
         if value is None or len(re.sub(r'\s', r'', value)) == 0:
@@ -77,7 +49,20 @@ class TaskEditForm(ModelForm):
 
     class Meta:
         model = models.Task
-        fields = ['title', 'estimate', 'state']
+        fields = ['title', 'estimate', 'state', 'roadmap']
         widgets = {
             'estimate': widgets.SelectDateWidget(),
         }
+
+
+class RoadmapAddForm(ModelForm):
+
+    def clean_title(self):
+        value = self.cleaned_data.get('title')
+        if value is None or len(re.sub(r'\s', r'', value)) == 0:
+            raise ValidationError('Title can not be empty', code="Empty title")
+        return value
+
+    class Meta:
+        model = models.Roadmap
+        fields = ['title']

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Создать дорожную карту
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'add_roadmap' %}" method="post">
+        {% csrf_token %}
+        {% for field in form.visible_fields %}
+            <h3>{{ field.label }}</h3>
+            {{ field }} {{ field.errors | join:"; " }}
+        {% endfor %}
+        <br>
+        <br>
+        <button class="btn" type="submit">Сохранить</button>
+        <br>
+    </form>
+    <br>
+    <a href="{% url 'index' %}">Вернуться на главную</a>
+{% endblock %}

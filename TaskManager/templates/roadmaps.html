@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Список дорожных карт
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+    <a href="{% url 'add_roadmap' %}">Добавить дорожную карту</a>
+    <table>
+        <thead>
+            <th>
+                Название
+            </th>
+            <th></th>
+            <th></th>
+        </thead>
+        <tbody>
+        {% for roadmap in roadmaps %}
+            <tr>
+                <td>
+                    {{ roadmap.title }}
+                </td>
+                <td>
+                    <a href="{% url 'tasks' roadmap_id=roadmap.id %}">Просмотр</a>
+                </td>
+                <td>
+                    <a href="{% url 'delete_roadmap' roadmap_id=roadmap.id %}">Удалить</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

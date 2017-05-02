@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}
+    {% if parent_roadmap == None %}
+        Все задачи
+    {% else %}
+        Все задачи дорожной карты {{ parent_roadmap.title }}
+    {% endif %}
+{% endblock %}
+{% block content %}
+    Здравствуйте, здравствуйте!
+    <br>
+    <a href="{% url 'add_task' %}{% if parent_roadmap != None %}{{ parent_roadmap.id }}/{% endif %}">Добавить задачу</a>
+    <br>
+    Ваши задачи:
+    <table>
+        <thead>
+            <th>
+                Название
+            </th>
+            <th>
+                Дедлайн
+            </th>
+            <th>
+                Статус
+            </th>
+            <th>
+            </th>
+        </thead>
+    {% for task in existing_data %}
+        <tr>
+            <td>
+                {{ task.title }}
+            </td>
+            <td>
+                {{ task.estimate }}
+            </td>
+            <td>
+                {{ task.state }}
+            </td>
+            <td>
+                <a href="/edit_task/{{ task.id }}">Отредактировать</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
