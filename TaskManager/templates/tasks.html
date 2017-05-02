@@ -23,9 +23,10 @@
             <th>
                 Статус
             </th>
-            <th>
-            </th>
+            <th></th>
+            <th></th>
         </thead>
+        <tbody>
     {% for task in existing_data %}
         <tr>
             <td>
@@ -38,9 +39,13 @@
                 {{ task.state }}
             </td>
             <td>
-                <a href="/edit_task/{{ task.id }}">Отредактировать</a>
+                <a href="{% url 'edit_task' task_id=task.id %}">Отредактировать</a>
+            </td>
+            <td>
+                <a href="{% url 'delete_task' task_id=task.id %}">Удалить</a>
             </td>
         </tr>
     {% endfor %}
+        </tbody>
     </table>
 {% endblock %}

@@ -55,7 +55,7 @@ def edit_task(request, task_id):
 
 def delete_task(request, task_id):
     Task.objects.get(pk=task_id).delete()
-    return HttpResponseRedirect(reverse('tasks'))
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
 def roadmaps(request):
@@ -75,4 +75,4 @@ def add_roadmap(request):
 
 def delete_roadmap(request, roadmap_id):
     Roadmap.objects.get(pk=roadmap_id).delete()
-    return HttpResponseRedirect(reverse('roadmaps'))
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
