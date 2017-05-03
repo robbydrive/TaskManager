@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from django.db import models
 
 IN_PROGRESS = 'in_progress'
@@ -16,6 +16,10 @@ class Roadmap(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def today(self):
+        return Task.objects.filter(estimate=date.today())
+
     class Meta:
         db_table = 'roadmaps'
 
@@ -30,9 +34,27 @@ class Task(models.Model):
                                 null=True,
                                )
 
+    def ready(self):
+        if self.state != READY:
+            self.state = READY
+            self.save()
+            return True
+        return False
+
+    @property
+    def remaining(self):
+        if self.state == IN_PROGRESS and not self.is_failed:
+            return self.estimate - date.today()
+        else:
+            return timedelta()
+
+    @property
+    def is_critical(self):
+        return self.state == IN_PROGRESS and self.remaining.days <= 3
+
     @property
     def is_failed(self):
-        return not (self.state == 'in_progress' and self.estimate < date.today())
+        return self.state == IN_PROGRESS and self.estimate < date.today()
 
     class Meta:
         db_table = 'tasks'

@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
 from Manager.forms import TaskCreateForm, TaskEditForm, RoadmapAddForm
@@ -18,13 +17,9 @@ def tasks(request, roadmap_id=None):
 
 
 def add_task(request, roadmap_id=None):
-    is_critical = 0
     if request.method == 'POST':
         form = TaskCreateForm(request.POST)
         if form.is_valid():
-            delta = str(form.cleaned_data['estimate'] - datetime.date(datetime.now()))
-            delta = '0' if delta.find('day') == -1 else delta.split()[0]
-            is_critical = 1 if int(delta) <= 3 else 0
             form.state = 'in_progress'
             form.save()
     else:
@@ -32,24 +27,19 @@ def add_task(request, roadmap_id=None):
         form.fields['roadmap'].initial = roadmap_id
     return render(
         request, 'task_add_form.html',
-        {'form': form, 'isCritical': is_critical, 'roadmap_id': roadmap_id}
+        {'form': form, 'roadmap_id': roadmap_id}
     )
 
 
 def edit_task(request, task_id):
-    is_critical = 0
     task_to_edit = Task.objects.get(pk=task_id)
     if request.method == 'POST':
         form = TaskEditForm(request.POST, instance=task_to_edit)
         if form.is_valid():
-            delta = str(form.cleaned_data['estimate'] - datetime.date(datetime.now()))
-            delta = '0' if delta.find('day') == -1 else delta.split()[0]
-            is_critical = 1 if int(delta) <= 3 else 0
             form.save()
     else:
         form = TaskEditForm(instance=task_to_edit)
     return render(request, 'task_edit_form.html', {'form': form,
-                                                   'isCritical': is_critical,
                                                    'task_id': task_id})
 
 
