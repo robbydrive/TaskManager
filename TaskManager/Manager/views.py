@@ -12,9 +12,9 @@ def index(request):
 def tasks(request, roadmap_id=None):
     return render(request, 'tasks.html',
                   {'existing_data': Task.objects.all() if roadmap_id is None
-                   else Task.objects.filter(roadmap=Roadmap.objects.get(pk=roadmap_id)),
+                                    else Task.objects.filter(roadmap=Roadmap.objects.get(pk=roadmap_id)),
                    'parent_roadmap': Roadmap.objects.get(pk=roadmap_id) if roadmap_id is not None
-                   else None})
+                                     else None})
 
 
 def add_task(request, roadmap_id=None):

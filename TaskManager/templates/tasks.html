@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}
     {% if parent_roadmap == None %}
         Все задачи
@@ -6,6 +8,10 @@
         Все задачи дорожной карты {{ parent_roadmap.title }}
     {% endif %}
 {% endblock %}
+
+{% block styles %}
+{% endblock %}
+
 {% block content %}
     Здравствуйте, здравствуйте!
     <br>

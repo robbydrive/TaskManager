@@ -1,3 +1,4 @@
+from datetime import date
 from django.db import models
 
 IN_PROGRESS = 'in_progress'
@@ -29,5 +30,10 @@ class Task(models.Model):
                                 null=True,
                                )
 
+    @property
+    def is_failed(self):
+        return not (self.state == 'in_progress' and self.estimate < date.today())
+
     class Meta:
         db_table = 'tasks'
+        ordering = ('state', 'estimate')
