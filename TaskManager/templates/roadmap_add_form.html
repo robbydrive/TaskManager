@@ -1,22 +1,29 @@
-{% extends "base.html" %}
+{% extends "main.html" %}
 {% load static %}
 
 {% block title %}
     Создать дорожную карту
 {% endblock %}
 
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="/static/css/add_task.css">
+{% endblock %}
+
 {% block content %}
-    <form action="{% url 'add_roadmap' %}" method="post">
+    <form action="{% url 'add_roadmap' %}" method="post" class="form main_form">
         {% csrf_token %}
-        {% for field in form.visible_fields %}
+        <div class="form_title">
+            Создание дорожной карты
+        </div>
+        <div class="form_input">
+            {% for field in form.visible_fields %}
             <h3>{{ field.label }}</h3>
             {{ field }} {{ field.errors | join:"; " }}
         {% endfor %}
+        </div>
         <br>
-        <br>
-        <button class="btn" type="submit">Сохранить</button>
+        <button class="form_button" type="submit">Сохранить</button>
         <br>
     </form>
     <br>
-    <a href="{% url 'index' %}">Вернуться на главную</a>
 {% endblock %}

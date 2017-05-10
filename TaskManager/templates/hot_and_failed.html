@@ -1,0 +1,86 @@
+{% extends "main.html" %}
+
+{% block title %}
+    Самая главная
+{% endblock %}
+
+    {% block styles %}
+        <link rel="stylesheet" type="text/css" href="/static/css/hot_and_failed.css">
+    {% endblock %}
+
+{% block content %}
+    <h1>Здравствуйте, здравствуйте!</h1>
+    {% if hot_tasks|length != 0 %}
+        <h2>Критичные задачи:</h2>
+        <table class="inner_table">
+        <thead>
+            <th>
+                Название
+            </th>
+            <th>
+                Дедлайн
+            </th>
+            <th>
+                Осталось дней
+            </th>
+            <th></th>
+            <th></th>
+        </thead>
+        <tbody>
+        {% for task in hot_tasks %}
+            <tr>
+                <td class="info">
+                    {{ task.title }}
+                </td>
+                <td class="info">
+                    {{ task.estimate }}
+                </td>
+                <td class="info">
+                    {{ task.remaining.days }}
+                </td>
+                <td class="action_btn">
+                    <a href="{% url 'edit_task' task_id=task.id %}" class="hot_link">Изменить</a>
+                </td>
+                <td class="action_btn">
+                    <a href="{% url 'delete_task' task_id=task.id %}" class="hot_link">Удалить</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <h2> Пока что можно не беспокоиться, критичных задач нет </h2>
+    {% endif %}
+
+    {% if failed_tasks|length != 0 %}
+        <h2>Успешно проваленные задачи:</h2>
+        <table class="inner_table">
+        <thead>
+            <th>
+                Название
+            </th>
+            <th>
+                Дедлайн
+            </th>
+            <th></th>
+        </thead>
+        <tbody>
+        {% for task in failed_tasks %}
+            <tr>
+                <td class="info">
+                    {{ task.title }}
+                </td>
+                <td class="info">
+                    {{ task.estimate }}
+                </td>
+                <td class="action_btn">
+                    <a href="{% url 'delete_task' task_id=task.id %}" class="hot_link">Удалить</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <h2> Просроченных задач нет </h2>
+    {% endif %}
+{% endblock %}

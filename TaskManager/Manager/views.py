@@ -66,3 +66,10 @@ def add_roadmap(request):
 def delete_roadmap(request, roadmap_id):
     Roadmap.objects.get(pk=roadmap_id).delete()
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+def get_hot_tasks(request):
+    hot_tasks = [task for task in Task.objects.all() if task.is_critical]
+    failed_tasks = [task for task in Task.objects.all() if task.is_failed]
+    return render(request, 'hot_and_failed.html', {'hot_tasks': hot_tasks,
+                                                   'failed_tasks': failed_tasks})

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "main.html" %}
 {% load static %}
 
 {% block title %}
@@ -6,28 +6,32 @@
 {% endblock %}
 
 {% block styles %}
-    <link rel="stylesheet" type="text/css" href="/static/task_form.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/add_task.css">
 {% endblock %}
 
 {% block content %}
-    <form action="{% url 'edit_task' task_id=task_id %}" method="post">
+    <form action="{% url 'edit_task' task_id=task_id %}" method="post" class="form main_form">
         {% csrf_token %}
-        {% for field in form.visible_fields %}
+        <div class="form_title">
+            Редактирование задачи
+        </div>
+        <div class="form_input">
+            {% for field in form.visible_fields %}
             <h3>{{ field.label }}</h3>
             {{ field }} {{ field.errors | join:"; " }}
         {% endfor %}
+        </div>
         <br>
+        <button class="form_button" type="submit">Сохранить</button>
         <br>
-        <button class="btn" type="submit">Сохранить</button>
-        <br>
+        {% if form.errors|length == 0 and form.is_valid and request.method == "POST" %}
+        <h3>Успех! Вот, что получилось: </h3>
+            <p><span {% if form.instance.is_critical %}class="critical"{% endif %}>Задача: {{ form.cleaned_data.title }}</span></p>
+            <p>Выполнить до {{ form.cleaned_data.estimate }}</p>
+            <p>Cтатус: {{ form.cleaned_data.state }}</p>
+        {% endif %}
     </form>
     <br>
-    <a href="{% url 'index' %}">Вернуться на главную</a>
 
-    {% if form.errors|length == 0 and form.is_valid and request.method == "POST" %}
-        <h3>Успех! Вот, что получилось: </h3>
-        <p><span {% if form.instance.is_critical %}class="critical"{% endif %}>Задача: {{ form.cleaned_data.title }}</span></p>
-        <p>Выполнить до {{ form.cleaned_data.estimate }}</p>
-        <p>Cтатус: {{ form.cleaned_data.state }}</p>
-    {% endif %}
+
 {% endblock %}

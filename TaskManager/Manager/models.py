@@ -1,5 +1,6 @@
 from datetime import date, timedelta
 from django.db import models
+from django.utils.timezone import now
 
 IN_PROGRESS = 'in_progress'
 READY = 'ready'

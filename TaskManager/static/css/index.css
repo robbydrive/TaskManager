@@ -1,0 +1,44 @@
+body{
+    background: fixed no-repeat url("/static/img/fact_dontbelazy.jpg");
+}
+
+a{text-decoration:none}
+
+.first-title {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 48px;
+    margin: 40px 50px;
+    text-shadow: 0 0 10px #000;
+    color: #fff;
+    text-align: center;
+}
+.subtitle{
+    font-size: 20px;
+    margin: 10px 0;
+    color: #ddd;
+}
+
+.welcome-start {
+    margin-top: 15%;
+}
+
+.row{
+    align-items: center;
+}
+
+/*убрать белый контур и сделать кнопки в центре друг под другом */
+a.btn {
+    color: white;
+    font-weight: 500;
+    text-decoration: none;
+    user-select: none;
+    padding: .5em 2em;
+    outline: none;
+    border: 2px none;
+    border-radius: 1px;
+    transition: 0.2s;
+    background: rgba(128, 0, 128, 0.4);
+}
+a.btn:hover { background: rgba(255,255,255,.5); }
+a.btn:active { background: white; }

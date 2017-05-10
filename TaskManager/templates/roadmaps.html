@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "main.html" %}
 {% load static %}
 
 {% block title %}
@@ -6,11 +6,13 @@
 {% endblock %}
 
 {% block styles %}
+    <link rel="stylesheet" type="text/css" href="/static/css/hot_and_failed.css">
 {% endblock %}
 
 {% block content %}
-    <a href="{% url 'add_roadmap' %}">Добавить дорожную карту</a>
-    <table>
+    {% if roadmaps|length != 0 %}
+    <h1> Ваши дорожные карты: </h1>
+    <table class="inner_table">
         <thead>
             <th>
                 Название
@@ -21,17 +23,20 @@
         <tbody>
         {% for roadmap in roadmaps %}
             <tr>
-                <td>
+                <td class="info">
                     {{ roadmap.title }}
                 </td>
-                <td>
-                    <a href="{% url 'tasks' roadmap_id=roadmap.id %}">Просмотр</a>
+                <td class="action_btn">
+                    <a href="{% url 'tasks' roadmap_id=roadmap.id %}" class="hot_link">Просмотр</a>
                 </td>
-                <td>
-                    <a href="{% url 'delete_roadmap' roadmap_id=roadmap.id %}">Удалить</a>
+                <td class="action_btn">
+                    <a href="{% url 'delete_roadmap' roadmap_id=roadmap.id %}" class="hot_link">Удалить</a>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    {% else %}
+        <h2> Список дорожных карт пуст </h2>
+    {% endif %}
 {% endblock %}

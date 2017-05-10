@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "main.html" %}
 {% load static %}
 
 {% block title %}
@@ -10,15 +10,20 @@
 {% endblock %}
 
 {% block styles %}
+    <link rel="stylesheet" type="text/css" href="/static/css/hot_and_failed.css">
 {% endblock %}
 
 {% block content %}
-    Здравствуйте, здравствуйте!
-    <br>
-    <a href="{% url 'add_task' %}{% if parent_roadmap != None %}{{ parent_roadmap.id }}/{% endif %}">Добавить задачу</a>
-    <br>
-    Ваши задачи:
-    <table>
+    {% if existing_data|length != 0 %}
+    {% if parent_roadmap == None %}
+        <h1> Ваши задачи </h1>
+    {% else %}
+        <div class="title">
+            <h1 class="rm_title"> Задачи дорожной карты "{{ parent_roadmap.title }}" </h1>
+            <a class="go_back" href="{% url 'roadmaps' %}">Назад</a>
+        </div>
+    {% endif %}
+    <table class="inner_table">
         <thead>
             <th>
                 Название
@@ -35,23 +40,27 @@
         <tbody>
     {% for task in existing_data %}
         <tr>
-            <td>
-                {{ task.title }}
+            <td class="info">
+                <span {% if task.is_critical %}class="critical"{% endif %}>{{ task.title }}</span>
             </td>
-            <td>
-                {{ task.estimate }}
+            <td class="info">
+                <span {% if task.is_critical %}class="critical"{% endif %}>{{ task.estimate }}</span>
             </td>
-            <td>
-                {{ task.state }}
+            <td class="info">
+                <span {% if task.is_critical %}class="critical"{% endif %}>{{ task.state }}</span>
             </td>
-            <td>
-                <a href="{% url 'edit_task' task_id=task.id %}">Отредактировать</a>
+            <td class="action_btn">
+                <a href="{% url 'edit_task' task_id=task.id %}" class="hot_link">Отредактировать</a>
             </td>
-            <td>
-                <a href="{% url 'delete_task' task_id=task.id %}">Удалить</a>
+            <td class="action_btn">
+                <a href="{% url 'delete_task' task_id=task.id %}" class="hot_link">Удалить</a>
             </td>
         </tr>
     {% endfor %}
         </tbody>
     </table>
+    {% else %}
+        <h2> Список задач пуст. Отдохните </h2> <!--исправить для ДК-->
+    {% endif %}
+    <br>
 {% endblock %}

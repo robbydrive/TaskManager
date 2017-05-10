@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" href="/static/img/head.png" type="image/x-icon">
+
+    <link rel="stylesheet" type="text/css" href="{% static "css/main.css"%}">
+    {% block styles %}{% endblock %}
+</head>
+<body>
+    <header id="main_head">
+    <div class="header_wrapper">
+        <a href="{% url 'hot' %}">
+            <img src="/static/img/index.png" height="50" width="50">
+            <p class="logo_text">Task Manager</p>
+        </a>
+        <nav>
+            <ul>
+                <li class="nav_item">
+                    <a class="nav_link first_link" href="{% url 'add_roadmap' %}">Добавить дорожную карту</a>
+                </li>
+                <li class="nav_item"><a class="nav_link"  href="{% url 'add_task' %}">Добавить задачу</a></li>
+                <li class="nav_item"><a class="nav_link" href="{% url 'roadmaps' %}">Все дорожные карты</a></li>
+                <li class="nav_item"><a class="nav_link last_link" href="{% url 'tasks' %}">Все задачи</a></li>
+            </ul>
+        </nav>
+    </div>
+    </header>
+
+    <main class="wrapper main_wrapper">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
