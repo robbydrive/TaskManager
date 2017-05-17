@@ -1,42 +1,26 @@
-{% extends "base.html" %}
-{% block title %}
-    Главная
-{% endblock %}
+{% load static %}
 
-{% block styles %}
-    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
-    <style>
-        a.btn {
-    display: inline-block;
-    color: white;
-    font-weight: 500;
-    text-decoration: none;
-    user-select: none;
-    padding: .5em 2em;
-    outline: none;
-    border: 2px solid;
-    border-radius: 1px;
-    transition: 0.2s;
-    background: rgba(128, 0, 128, 0.4);
-}
-a.btn:hover { background: rgba(255,255,255,.5); }
-a.btn:active { background: white; }
-    </style>
-{% endblock %}
-{% block content %}
-    <div>
-        <div class="welcome-start">
-            <h2 class="first-title">
-                Task Manager
-                <div class="subtitle">
-                    Успей всё
-                </div>
-            </h2>
-            <div class="row">
-                <a class="btn" href="#">Вход</a>
-                <a class="btn" href="#">Регистрация</a>
-                <a class="btn" href="{% url 'hot' %}">Без регистрации и смс</a>
-            </div>
-      </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+    <link rel="shortcut icon" href="/static/img/head.png" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+        <script src = "/static/script/jquery-3.2.1.js"></script>
+        <script src = "/static/script/fadeScript.js" ></script>
+</head>
+<body>
+    <h1 class="first-title">
+        Task Manager
+    </h1>
+    <h2 class="show_it">
+            Успей всё
+    </h2>
+    <div id="btnContainer" class = "showIt" >
+        <a class="btn" href="#">Вход</a>
+        <a class="btn" href="#">Регистрация</a>
+        <a class="btn" href="{% url 'hot' %}">Без регистрации и смс</a>
     </div>
-{% endblock %}
+</body>
+</html>

@@ -1,10 +1,16 @@
-body{
-    background: fixed no-repeat url("/static/img/fact_dontbelazy.jpg");
+html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+}
+body {
+    margin: 0;
+    padding: 0;
+    background: fixed no-repeat url("../img/fact_dontbelazy.jpg");
+    background-size: 100%;
 }
 
-a{text-decoration:none}
-
-.first-title {
+h1,h2 {
     font-weight: bold;
     text-transform: uppercase;
     font-size: 48px;
@@ -12,33 +18,41 @@ a{text-decoration:none}
     text-shadow: 0 0 10px #000;
     color: #fff;
     text-align: center;
-}
-.subtitle{
-    font-size: 20px;
-    margin: 10px 0;
-    color: #ddd;
+
 }
 
-.welcome-start {
-    margin-top: 15%;
+h2 {
+        font-size: 20px;
+        margin: 10px 0;
+        color: #ddd;
 }
 
-.row{
-    align-items: center;
+#btnContainer{
+    position: relative;
+    padding: 5% 35%;
 }
 
-/*убрать белый контур и сделать кнопки в центре друг под другом */
+.showIt {
+/*      visibility:hidden; */
+        display:none;
+
+}
+
 a.btn {
+    text-align:center; /*текст по центру строчного элемента*/
+    display: block;
     color: white;
-    font-weight: 500;
+    font-size: 1.5em;
     text-decoration: none;
-    user-select: none;
     padding: .5em 2em;
     outline: none;
-    border: 2px none;
-    border-radius: 1px;
+    //border: 0px solid;
+    //border-radius: 1px;
     transition: 0.2s;
     background: rgba(128, 0, 128, 0.4);
+    overflow: hidden;
 }
-a.btn:hover { background: rgba(255,255,255,.5); }
+
+a.btn:hover { background: rgba(255,255,255,0.5); }
 a.btn:active { background: white; }
+
