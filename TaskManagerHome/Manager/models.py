@@ -34,11 +34,15 @@ class Task(models.Model):
                                 blank=True,
                                 null=True,
                                )
+    created = models.DateField(auto_now_add=True)
 
     def ready(self):
         if self.state != READY:
             self.state = READY
             self.save()
+            # Formula: (estimate - today + 1) / (estimate - created) * (tasks completed in time in % from all tasks)
+            # if task is failed, then division part equals minimum positive number (according to formula)
+            # code to assign points to user for task
             return True
         return False
 
@@ -60,3 +64,12 @@ class Task(models.Model):
     class Meta:
         db_table = 'tasks'
         ordering = ('state', 'estimate')
+
+
+class Scores(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    points = models.DecimalField(max_digits=4, decimal_places=2)
+    task = models.ForeignKey(Task, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        db_table = 'scores'
