@@ -51,7 +51,7 @@ class Task(models.Model):
 
     @property
     def is_critical(self):
-        return self.state == IN_PROGRESS and self.remaining.days <= 3
+        return self.state == IN_PROGRESS and self.remaining.days <= 3 and self.estimate >= date.today()
 
     @property
     def is_failed(self):
