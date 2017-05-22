@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+    <h3>Созданные/решённые</h3>
     <table class="inner_table">
         <thead>
             <th>
@@ -32,7 +33,7 @@
             </th>
         </thead>
         <tbody>
-        {% for line in table_lines %}
+        {% for line in table1_lines %}
             <tr>
                 <td class="info">
                     {{ line.year }}
@@ -51,6 +52,29 @@
                 </td>
                 <td class="info">
                     {{ line.finished_count }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <h3>Очки</h3>
+    <table class="inner_table">
+        <thead>
+            <th>
+                Месяц
+            </th>
+            <th>
+                Зачислено
+            </th>
+        </thead>
+        <tbody>
+        {% for line in table2_lines %}
+            <tr>
+                <td class="info">
+                    {{ line.month }}
+                </td>
+                <td class="info">
+                    {{ line.points }}
                 </td>
             </tr>
         {% endfor %}

@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
-from django.db.models import Max, Min, F, ExpressionWrapper, DateTimeField
 from Manager.forms import TaskCreateForm, TaskEditForm, RoadmapAddForm
 from Manager.models import Task, Roadmap, READY
 
@@ -78,28 +77,7 @@ def get_hot_tasks(request):
 
 
 def stat(request, roadmap_id):
-    queryset = Task.objects.filter(roadmap=roadmap_id)
-    created_dates = queryset.aggregate(min_date=Min('created'), max_date=Max('created'))
-    min_date = created_dates['min_date']
-    min_date = datetime.strptime(f'{min_date.year}-{min_date.isocalendar()[1]}-1', '%Y-%W-%w')
-    finished_date = queryset.aggregate(max_date=Max('finished'))
-    max_date = max(finished_date['max_date'], created_dates['max_date'])
-    created_and_finished = []
-    current = min_date.date()
-    while current <= max_date:
-        created_and_finished.append({
-            'year': current.year,
-            'weekno': current.isocalendar()[1],
-            'start_date': current.strftime("%Y-%m-%d"),
-            'end_date': (current + timedelta(days=6)).strftime("%Y-%m-%d"),
-            'created_count': queryset.filter(created__range=[current, current + timedelta(days=6)]) \
-                                     .count(),
-            'finished_count': queryset.filter(state=READY,
-                                              finished__range=[current, current + timedelta(days=6)]) \
-                                      .count()
-        })
-        current += timedelta(weeks=1)
-        print(current)
-    return render(request, 'stat.html', {'min_date': min_date,
-                                         'max_date': max_date,
-                                         'table_lines': created_and_finished})
+    created_and_finished = Roadmap.created_and_finished_stat(roadmap_id)
+    points = Roadmap.points_stat(roadmap_id)
+    return render(request, 'stat.html', {'table1_lines': created_and_finished,
+                                         'table2_lines': points})
