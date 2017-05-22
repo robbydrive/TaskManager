@@ -1,6 +1,6 @@
 from datetime import date, timedelta, datetime
 from dateutil.relativedelta import relativedelta
-from django.db import models, transaction
+from django.db import models, transaction, IntegrityError
 from django.db.models import Min, Max, Sum, F
 from django.db.models.functions import Coalesce
 
@@ -72,7 +72,8 @@ class Roadmap(models.Model):
             points.append({
                 'month': current.strftime('%Y-%m'),
                 'points': Scores.objects.filter(task__roadmap=roadmap,
-                                                date__range=[current, current+relativedelta(months=1)-timedelta(days=1)])\
+                                                date__range=[current,
+                                                             current+relativedelta(months=1)-timedelta(days=1)])\
                                         .aggregate(total_points=Sum(Coalesce('points', 0.0))).get('points__sum', 0.0)
             })
             current += relativedelta(months=1)
@@ -101,15 +102,15 @@ class Task(models.Model):
             try:
                 with transaction.atomic():
                     self.save()
-                    # Formula: (estimate - today + 1) / (estimate - created) * (tasks completed in time in % from all tasks)
+                    # Formula: (estimate - today + 1) / (estimate - created) * (tasks completed in time in %)
                     # if task is failed, then division part equals minimum positive number (according to formula)
                     # code to assign points to user for task
                     percent = Task.objects.filter(finished__lte=F('estimate')).count() \
-                              / Task.objects.filter(state=READY) * 100.0
-                    Scores.objects.create(points=(self.estimate-date.today()+1) / (self.estimate-self.created) * percent,
-                                      task=self)
+                               / Task.objects.filter(state=READY) * 100.0
+                    Scores.objects.create(points=(self.estimate-date.today()+1)/(self.estimate-self.created) * percent,
+                                          task=self)
                     return True
-            except Exception as e:
+            except IntegrityError as e:
                 print(e) # TO DO: set up logging
         return False
 

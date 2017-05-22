@@ -9,7 +9,7 @@ class TaskCreateForm(ModelForm):
 
     def clean_title(self):
         value = self.cleaned_data.get('title')
-        if value is None or len(re.sub(r'\s', r'', value)) == 0:
+        if value is None or not re.sub(r'\s', r'', value):
             raise ValidationError('Title can not be empty', code="Empty title")
         return value
 
@@ -31,7 +31,7 @@ class TaskEditForm(ModelForm):
 
     def clean_title(self):
         value = self.cleaned_data.get('title')
-        if value is None or len(re.sub(r'\s', r'', value)) == 0:
+        if value is None or not re.sub(r'\s', r'', value):
             raise ValidationError('Title can not be empty', code="Empty title")
         return value
 
@@ -59,7 +59,7 @@ class RoadmapAddForm(ModelForm):
 
     def clean_title(self):
         value = self.cleaned_data.get('title')
-        if value is None or len(re.sub(r'\s', r'', value)) == 0:
+        if value is None or not re.sub(r'\s', r'', value):
             raise ValidationError('Title can not be empty', code="Empty title")
         return value
 
