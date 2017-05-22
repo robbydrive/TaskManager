@@ -92,6 +92,11 @@ TEST_DATABASES = {
     }
 }
 
+# Auth
+# Settings for django.contrib.auth
+
+AUTH_USER_MODEL = 'Manager.User'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

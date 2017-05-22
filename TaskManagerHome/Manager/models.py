@@ -3,6 +3,7 @@ from dateutil.relativedelta import relativedelta
 from django.db import models, transaction, IntegrityError
 from django.db.models import Min, Max, Sum, F
 from django.db.models.functions import Coalesce
+from django.contrib.auth.models import AbstractUser
 
 
 IN_PROGRESS = 'in_progress'
@@ -140,3 +141,21 @@ class Scores(models.Model):
 
     class Meta:
         db_table = 'scores'
+
+
+class User(AbstractUser):
+    email = models.CharField(max_length=200, unique=True)
+    phone = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    age = models.PositiveIntegerField()
+    region = models.CharField(max_length=100)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['phone', 'first_name', 'last_name']
+
+    def get_full_name(self):
+        return f'{self.first_name} {self.last_name}'
+
+    def get_short_name(self):
+        return f'{self.first_name}'
