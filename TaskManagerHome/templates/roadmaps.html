@@ -19,6 +19,7 @@
             </th>
             <th></th>
             <th></th>
+            <th></th>
         </thead>
         <tbody>
         {% for roadmap in roadmaps %}
@@ -31,6 +32,9 @@
                 </td>
                 <td class="action_btn">
                     <a href="{% url 'delete_roadmap' roadmap_id=roadmap.id %}" class="hot_link">Удалить</a>
+                </td>
+                <td class="action_btn">
+                    <a href="{% url 'roadmap_stat' roadmap_id=roadmap.id %}" class="hot_link">Статистика</a>
                 </td>
             </tr>
         {% endfor %}

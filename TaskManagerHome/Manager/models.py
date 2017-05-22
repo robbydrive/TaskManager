@@ -1,5 +1,6 @@
 from datetime import date, timedelta
 from django.db import models
+from django.db.models import F
 from django.utils.timezone import now
 
 IN_PROGRESS = 'in_progress'
@@ -35,14 +36,20 @@ class Task(models.Model):
                                 null=True,
                                )
     created = models.DateField(auto_now_add=True)
+    finished = models.DateField(null=True)
 
     def ready(self):
         if self.state != READY:
             self.state = READY
+            self.finished = date.today()
             self.save()
             # Formula: (estimate - today + 1) / (estimate - created) * (tasks completed in time in % from all tasks)
             # if task is failed, then division part equals minimum positive number (according to formula)
             # code to assign points to user for task
+            percent = Task.objects.filter(finished__lte=F('estimate')).count() \
+                      / Task.objects.filter(state=READY) * 100.0
+            Scores.objects.create(points=(self.estimate-date.today()+1) / (self.estimate-self.created) * percent,
+                                  task=self)
             return True
         return False
 
@@ -50,8 +57,7 @@ class Task(models.Model):
     def remaining(self):
         if self.state == IN_PROGRESS and not self.is_failed:
             return self.estimate - date.today()
-        else:
-            return timedelta()
+        return timedelta()
 
     @property
     def is_critical(self):

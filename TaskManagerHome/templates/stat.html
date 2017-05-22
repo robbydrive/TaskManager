@@ -1,0 +1,59 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}
+    Статистика
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="/static/css/hot_and_failed.css">
+{% endblock %}
+
+{% block content %}
+    <table class="inner_table">
+        <thead>
+            <th>
+                Год
+            </th>
+            <th>
+                Номер недели
+            </th>
+            <th>
+                Дата начала
+            </th>
+            <th>
+                Дата окончания
+            </th>
+            <th>
+                Создано
+            </th>
+            <th>
+                Решено
+            </th>
+        </thead>
+        <tbody>
+        {% for line in table_lines %}
+            <tr>
+                <td class="info">
+                    {{ line.year }}
+                </td>
+                <td class="info">
+                    {{ line.weekno }}
+                </td>
+                <td class="info">
+                    {{ line.start_date }}
+                </td>
+                <td class="info">
+                    {{ line.end_date }}
+                </td>
+                <td class="info">
+                    {{ line.created_count }}
+                </td>
+                <td class="info">
+                    {{ line.finished_count }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

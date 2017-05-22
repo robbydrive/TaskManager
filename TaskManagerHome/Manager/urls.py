@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^add_roadmap/$', views.add_roadmap, name='add_roadmap'),
     url(r'^delete_roadmap/(?P<roadmap_id>.+)/$', views.delete_roadmap, name='delete_roadmap'),
     url(r'^hot$', views.get_hot_tasks, name='hot'),
+    url(r'^stat/(?P<roadmap_id>.*)/$', views.stat, name='roadmap_stat')
 ]
