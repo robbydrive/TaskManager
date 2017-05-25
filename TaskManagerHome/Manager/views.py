@@ -4,7 +4,7 @@ from django.db.models import ObjectDoesNotExist
 from django.contrib.auth import login, logout, get_user
 from django.contrib.auth.decorators import login_required
 from Manager.forms import CustomPasswordChangeForm, CustomUserCreationForm, CustomAuthenticationForm, \
-    TaskCreateForm, TaskEditForm, RoadmapAddForm, CustomUserEditForm
+    TaskCreateForm, TaskEditForm, RoadmapAddForm, CustomUserEditForm, CustomUserEditCutForm
 from Manager.models import Task, Roadmap, User, READY
 from social_django.models import UserSocialAuth
 
@@ -147,14 +147,17 @@ def log_out(request):
 @login_required()
 def profile(request):
     user = get_user(request)
-
+    condition = user.social_auth.count() > 0
+    if condition:
+        form = CustomUserEditCutForm(instance=user)
+    else:
+        form = CustomUserEditForm(instance=user)
     # try:
     #     github_login = user.social_auth.get(provider='github')
     # except UserSocialAuth.DoesNotExist:
     #     github_login = None
 
     # can_disconnect = (user.social_auth.count() > 1 or user.has_usable_password())
-    form = CustomUserEditForm(instance=user)
     return render(request, 'show_profile.html', {'form': form})
                                                  # 'github_login': github_login,
                                                  # 'can_disconnect': can_disconnect})
@@ -163,14 +166,21 @@ def profile(request):
 @login_required()
 def edit_profile(request):
     user = get_user(request)
+    condition = user.social_auth.count() > 0
     if request.method == "POST":
-        form = CustomUserEditForm(request.POST, instance=user)
+        if condition:
+            form = CustomUserEditCutForm(request.POST, instance=user)
+        else:
+            form = CustomUserEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('profile'))
-    else:
+    elif not condition:
         form = CustomUserEditForm(instance=user)
-    #form.fields['email'].disabled = True
+    else:
+        form = CustomUserEditCutForm(instance=user)
+    # import ipdb
+    # ipdb.set_trace()
     return render(request, 'profile_edit_form.html', {'form': form})
 
 

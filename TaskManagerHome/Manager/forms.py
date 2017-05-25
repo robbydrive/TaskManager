@@ -97,7 +97,14 @@ class CustomUserEditForm(ModelForm):
 
     class Meta:
         model = models.User
-        fields = ('email', 'phone', 'first_name', 'last_name', 'age', 'region',)
+        fields = ['email', 'phone', 'first_name', 'last_name', 'age', 'region',]
+
+
+class CustomUserEditCutForm(ModelForm):
+
+    class Meta:
+        model = models.User
+        fields = ['first_name', 'last_name', 'age', 'region']
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):
