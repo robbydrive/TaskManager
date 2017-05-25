@@ -1,10 +1,10 @@
-from datetime import datetime, timedelta
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import login, logout, get_user
 from django.contrib.auth.decorators import login_required
-from Manager.forms import *
-from Manager.models import Task, Roadmap, READY, User
+from Manager.forms import CustomPasswordChangeForm, CustomUserCreationForm, CustomAuthenticationForm, \
+    TaskCreateForm, TaskEditForm, RoadmapAddForm, CustomUserEditForm
+from Manager.models import Task, Roadmap, READY
 
 
 def index(request):
@@ -99,8 +99,6 @@ def sign_up(request):
 
 def sign_in(request):
     if request.method == "POST":
-        import ipdb
-        ipdb.set_trace()
         form = CustomAuthenticationForm(data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
@@ -118,20 +116,32 @@ def log_out(request):
 
 @login_required()
 def profile(request):
-    values = User.objects.values().get(pk=get_user(request).id)
-    custom_fields = ('email', 'phone', 'first_name', 'last_name', 'age', 'region',)
-    values = {key: values[key] for key in values.keys() if key in custom_fields}
-    return render(request, 'show_profile.html', {'values': values})
+    form = CustomUserEditForm(instance=get_user(request))
+    return render(request, 'show_profile.html', {'form': form})
 
 
 @login_required()
 def edit_profile(request):
     user = get_user(request)
     if request.method == "POST":
-        form = CustomUserCreationForm(request.POST, instance=user)
+        form = CustomUserEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('profile'))
     else:
-        form = CustomUserCreationForm(instance=user)
+        form = CustomUserEditForm(instance=user)
+    form.fields['email'].disabled = True
     return render(request, 'profile_edit_form.html', {'form': form})
+
+
+@login_required()
+def change_password(request):
+    user = get_user(request)
+    if request.method == "POST":
+        form = CustomPasswordChangeForm(user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('hot'))
+    else:
+        form = CustomPasswordChangeForm(user)
+    return render(request, 'password_change.html', {'form': form})

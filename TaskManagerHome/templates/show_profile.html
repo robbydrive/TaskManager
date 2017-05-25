@@ -9,20 +9,19 @@
 {% endblock %}
 
 {% block content %}
-    <h3>Профиль пользователя {{ values.first_name }} {{ values.last_name }}</h3>
-    <table class="inner_table">
-        <thead>
-            <th></th>
-            <th></th>
-        </thead>
-        <tbody>
-            {% for key, value in values.items %}
-            <tr>
-                <td>{{ key }}</td>
-                <td>{{ value }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <a href="{% url 'edit_profile' %}">Изменить</a>
+    <h3>Профиль пользователя {{ form.instance.first_name }} {{ form.instance.last_name }}</h3>
+    <form action="{% url 'edit_profile' %}" method="GET" class="form main_form">
+        {% csrf_token %}
+        <div class="form_input">
+        <fieldset disabled>
+        {% for field in form.visible_fields %}
+            <h3>{{ field.label }}</h3>
+            {{ field }} {{ field.errors | join:"; " }}
+        {% endfor %}
+        </fieldset>
+        </div>
+        <br>
+        {% if request.user == form.instance %}
+        <button class="form_button" type="submit">Изменить</button>
+        {% endif %}
 {% endblock %}

@@ -2,7 +2,7 @@ from datetime import date
 import re
 from Manager import models
 from django.forms import ModelForm, widgets
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.core.exceptions import ValidationError
 
 
@@ -91,3 +91,25 @@ class CustomAuthenticationForm(AuthenticationForm):
 
     class Meta:
         model = models.User
+
+
+class CustomUserEditForm(ModelForm):
+
+    class Meta:
+        model = models.User
+        fields = ('email', 'phone', 'first_name', 'last_name', 'age', 'region',)
+
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+
+    error_messages = dict(PasswordChangeForm.error_messages, **{
+        'same_passwords': "You entered two same passwords. Change the new password or abort the operation"
+    })
+
+    def clean_new_password1(self):
+        if self.cleaned_data.get('old_password') == self.cleaned_data.get('new_password1'):
+            raise ValidationError(
+                self.error_messages['same_passwords'],
+                code="same_passwords"
+            )
+        return self.cleaned_data.get('new_password1')

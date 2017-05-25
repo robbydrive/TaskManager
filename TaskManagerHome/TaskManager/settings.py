@@ -96,6 +96,7 @@ TEST_DATABASES = {
 # Settings for django.contrib.auth
 
 AUTH_USER_MODEL = 'Manager.User'
+LOGIN_URL = '/signin'
 
 
 # Password validation

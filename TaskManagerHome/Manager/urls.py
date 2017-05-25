@@ -16,5 +16,6 @@ urlpatterns = [
     url(r'^signin$', views.sign_in, name='signin'),
     url(r'^logout$', views.logout, name='logout'),
     url(r'^profile$', views.profile, name='profile'),
-    url(r'^edit_profile', views.edit_profile, name='edit_profile')
+    url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
+    url(r'^change_password$', views.change_password, name='change_password')
 ]
