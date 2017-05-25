@@ -20,8 +20,8 @@ class User(AbstractUser):
     phone = models.CharField(max_length=50, verbose_name="Phone number")
     first_name = models.CharField(max_length=50, verbose_name="First name")
     last_name = models.CharField(max_length=50, verbose_name="Last name")
-    age = models.PositiveIntegerField(blank=True, verbose_name="Age")
-    region = models.CharField(max_length=100, blank=True, verbose_name="Region")
+    age = models.PositiveIntegerField(blank=True, verbose_name="Age", null=True)
+    region = models.CharField(max_length=100, blank=True, verbose_name="Region", null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['phone', 'first_name', 'last_name']

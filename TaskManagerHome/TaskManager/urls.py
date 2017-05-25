@@ -19,5 +19,6 @@ import Manager.urls
 
 urlpatterns = [
     url(r'^', include(Manager.urls)),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
     url(r'^admin/', admin.site.urls),
 ]

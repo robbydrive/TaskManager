@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Manager',
+    'social_django',
+    'Manager'
 ]
 
 MIDDLEWARE = [
@@ -48,6 +49,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'social_django.middleware.SocialAuthExceptionMiddleware'
 ]
 
 ROOT_URLCONF = 'TaskManager.urls'
@@ -63,6 +66,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -96,7 +102,20 @@ TEST_DATABASES = {
 # Settings for django.contrib.auth
 
 AUTH_USER_MODEL = 'Manager.User'
-LOGIN_URL = '/signin'
+LOGIN_URL = 'signin'
+LOGOUT_URL = 'logout'
+LOGIN_REDIRECT_URL = '/'
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    # 'social_core.backends.mailru.MailruOAuth2',
+    # 'social_core.backends.vk.VKOAuth2',
+
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_GITHUB_KEY = 'e7c2d16cb42dfb6faf34'
+SOCIAL_AUTH_GITHUB_SECRET = '8f4aebe49e00867e1e05beffd18ba65963178592'
 
 
 # Password validation
