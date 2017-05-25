@@ -4,14 +4,17 @@
 {% endblock %}
 
 {% block styles %}
-    <link rel="stylesheet" type="text/css" href="/static/css/hot_and_failed.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+    <!--<link rel="stylesheet" type="text/css" href="/static/css/hot_and_failed.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">-->
+    <link rel="stylesheet" type="text/css" href="/static/css/forms.css">
 {% endblock %}
 
 {% block content %}
-    <h3>Профиль пользователя {{ form.instance.first_name }} {{ form.instance.last_name }}</h3>
     <form action="{% url 'edit_profile' %}" method="GET" class="form main_form">
         {% csrf_token %}
+        <div class="form_title">
+            Профиль пользователя {{ form.instance.first_name }} {{ form.instance.last_name }}
+        </div>
         <div class="form_input">
         <fieldset disabled>
         {% for field in form.visible_fields %}
@@ -22,6 +25,9 @@
         </div>
         <br>
         {% if request.user == form.instance %}
-        <button class="form_button" type="submit">Изменить</button>
+            <button class="form_button" type="submit">Изменить информацию</button>
+            <button class="form_button"><a href="{% url 'change_password' %}">Изменить пароль</a></button>
         {% endif %}
+    </form>
+
 {% endblock %}
