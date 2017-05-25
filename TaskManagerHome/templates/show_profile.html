@@ -30,20 +30,20 @@
     </form>
     <br>
     <a class="form_button" href="{% url 'change_password' %}">Изменить пароль</a>
-    <br>
-    <h3>GitHub</h3>
-  {% if github_login %}
-    <p>Connected as <a href="https://github.com/{{ github_login.extra_data.login }}/" target="_blank">{{ github_login.extra_data.login }}</a></p>
-    {% if can_disconnect %}
-      <form method="post" action="{% url 'social:disconnect' 'github' %}">
-        {% csrf_token %}
-        <button  class="form_button" type="submit">Disconnect from GitHub</button>
-      </form>
-    {% else %}
-      <button type="button" disabled>Disconnect from GitHub</button>
-      <p style="color: red">You must <a href="{% url 'change_password' %}">define a password</a> for your account before disconnecting from Github.</p>
-    {% endif %}
-  {% else %}
-    <a  class="form_button" href="{% url 'social:begin' 'github' %}">Connect to GitHub</a>
-  {% endif %}
+{#    <br>#}
+{#    <h3>GitHub</h3>#}
+{#  {% if github_login %}#}
+{#    <p>Connected as <a href="https://github.com/{{ github_login.extra_data.login }}/" target="_blank">{{ github_login.extra_data.login }}</a></p>#}
+{#    {% if can_disconnect %}#}
+{#      <form method="post" action="{% url 'social:disconnect' 'github' %}">#}
+{#        {% csrf_token %}#}
+{#        <button  class="form_button" type="submit">Disconnect from GitHub</button>#}
+{#      </form>#}
+{#    {% else %}#}
+{#      <button type="button" disabled>Disconnect from GitHub</button>#}
+{#      <p style="color: red">You must <a href="{% url 'change_password' %}">define a password</a> for your account before disconnecting from Github.</p>#}
+{#    {% endif %}#}
+{#  {% else %}#}
+{#    <a  class="form_button" href="{% url 'social:begin' 'github' %}">Connect to GitHub</a>#}
+{#  {% endif %}#}
 {% endblock %}

@@ -148,16 +148,16 @@ def log_out(request):
 def profile(request):
     user = get_user(request)
 
-    try:
-        github_login = user.social_auth.get(provider='github')
-    except UserSocialAuth.DoesNotExist:
-        github_login = None
+    # try:
+    #     github_login = user.social_auth.get(provider='github')
+    # except UserSocialAuth.DoesNotExist:
+    #     github_login = None
 
-    can_disconnect = (user.social_auth.count() > 1 or user.has_usable_password())
+    # can_disconnect = (user.social_auth.count() > 1 or user.has_usable_password())
     form = CustomUserEditForm(instance=user)
-    return render(request, 'show_profile.html', {'form': form,
-                                                 'github_login': github_login,
-                                                 'can_disconnect': can_disconnect})
+    return render(request, 'show_profile.html', {'form': form})
+                                                 # 'github_login': github_login,
+                                                 # 'can_disconnect': can_disconnect})
 
 
 @login_required()
