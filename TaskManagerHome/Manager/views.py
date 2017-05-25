@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from Manager.forms import CustomPasswordChangeForm, CustomUserCreationForm, CustomAuthenticationForm, \
     TaskCreateForm, TaskEditForm, RoadmapAddForm, CustomUserEditForm
 from Manager.models import Task, Roadmap, User, READY
+from social_django.models import UserSocialAuth
 
 
 def index(request):
@@ -145,8 +146,18 @@ def log_out(request):
 
 @login_required()
 def profile(request):
-    form = CustomUserEditForm(instance=get_user(request))
-    return render(request, 'show_profile.html', {'form': form})
+    user = get_user(request)
+
+    try:
+        github_login = user.social_auth.get(provider='github')
+    except UserSocialAuth.DoesNotExist:
+        github_login = None
+
+    can_disconnect = (user.social_auth.count() > 1 or user.has_usable_password())
+    form = CustomUserEditForm(instance=user)
+    return render(request, 'show_profile.html', {'form': form,
+                                                 'github_login': github_login,
+                                                 'can_disconnect': can_disconnect})
 
 
 @login_required()

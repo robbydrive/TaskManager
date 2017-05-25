@@ -102,8 +102,8 @@ TEST_DATABASES = {
 # Settings for django.contrib.auth
 
 AUTH_USER_MODEL = 'Manager.User'
-LOGIN_URL = 'signin'
-LOGOUT_URL = 'logout'
+LOGIN_URL = '/signin/'
+LOGOUT_URL = '/logout/'
 LOGIN_REDIRECT_URL = '/'
 
 AUTHENTICATION_BACKENDS = (
@@ -113,6 +113,10 @@ AUTHENTICATION_BACKENDS = (
 
     'django.contrib.auth.backends.ModelBackend',
 )
+
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/profile/'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/profile/'
+SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 
 SOCIAL_AUTH_GITHUB_KEY = 'e7c2d16cb42dfb6faf34'
 SOCIAL_AUTH_GITHUB_SECRET = '8f4aebe49e00867e1e05beffd18ba65963178592'
