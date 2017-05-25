@@ -88,7 +88,7 @@ class Roadmap(models.Model):
 
     @staticmethod
     def points_stat(roadmap_id, user):
-        roadmap = Roadmap.objects.get(pk=roadmap_id)
+        roadmap = Roadmap.objects.get(user=user, pk=roadmap_id)
         min_date = roadmap.min_date
         min_date = datetime.strptime(f'{min_date.year}-{min_date.month}-01', '%Y-%m-%d').date()
         max_date = roadmap.max_date

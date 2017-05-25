@@ -12,8 +12,7 @@ def index(request):
     user = get_user(request)
     if not isinstance(user, User):
         return render(request, 'index.html')
-    else:
-        return HttpResponseRedirect(reverse('hot'))
+    return HttpResponseRedirect(reverse('hot'))
 
 
 @login_required()
@@ -34,7 +33,8 @@ def add_task(request, roadmap_id=None):
         if form.is_valid() and \
                 ((roadmap_id and Roadmap.objects.get(pk=roadmap_id).user == user) or roadmap_id is None):
             form.cleaned_data['state'] = 'in_progress'
-            form.save(user)
+            form.instance.user = user
+            form.save()
         elif form.is_valid():
             form.add_error('roadmap', 'Roadmap does not belong to user from task')
     else:
@@ -79,7 +79,8 @@ def add_roadmap(request):
     if request.method == 'POST':
         form = RoadmapAddForm(request.POST)
         if form.is_valid():
-            new_roadmap = form.save(get_user(request))
+            form.instance.user = get_user(request)
+            new_roadmap = form.save()
             return HttpResponseRedirect(reverse('add_task', kwargs={'roadmap_id': new_roadmap.id}))
     else:
         form = RoadmapAddForm()
