@@ -170,7 +170,7 @@ def edit_profile(request):
             return HttpResponseRedirect(reverse('profile'))
     else:
         form = CustomUserEditForm(instance=user)
-    form.fields['email'].disabled = True
+    #form.fields['email'].disabled = True
     return render(request, 'profile_edit_form.html', {'form': form})
 
 
