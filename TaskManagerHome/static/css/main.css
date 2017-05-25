@@ -15,6 +15,10 @@ nav ul{list-style:none}
     background-color: ghostwhite;
     height:60px; /*70*/
     box-shadow: 0 8px 6px -6px rgba(60, 179, 113,0.6);
+    position: relative;
+    left:0;
+    right: 0;
+    top:0;
 }
 
 .header_wrapper {
@@ -43,6 +47,7 @@ nav ul{list-style:none}
     float: left;
     margin-right: 0;
     margin-bottom: 27px;
+    position: relative;
 }
 
 .nav_link {
