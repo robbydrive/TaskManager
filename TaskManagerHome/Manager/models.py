@@ -97,7 +97,7 @@ class Task(models.Model):
     finished = models.DateField(null=True)
 
     def ready(self):
-        if self.state != READY:
+        if Task.objects.get(pk=self.pk).state != READY:
             self.state = READY
             self.finished = date.today()
             try:
@@ -107,12 +107,14 @@ class Task(models.Model):
                     # if task is failed, then division part equals minimum positive number (according to formula)
                     # code to assign points to user for task
                     percent = Task.objects.filter(finished__lte=F('estimate')).count() \
-                               / Task.objects.filter(state=READY) * 100.0
-                    Scores.objects.create(points=(self.estimate-date.today()+1)/(self.estimate-self.created) * percent,
-                                          task=self)
+                               / Task.objects.filter(state=READY).count() * 100.0
+                    value = (self.estimate - date.today() + timedelta(days=1))\
+                            / (self.estimate - self.created) * percent
+                    Scores.objects.create(points=value, task=self)
                     return True
             except IntegrityError as e:
                 print(e) # TO DO: set up logging
+        self.save()
         return False
 
     @property
@@ -136,7 +138,7 @@ class Task(models.Model):
 
 class Scores(models.Model):
     date = models.DateTimeField(auto_now_add=True)
-    points = models.DecimalField(max_digits=4, decimal_places=2)
+    points = models.DecimalField(max_digits=10, decimal_places=2)
     task = models.ForeignKey(Task, on_delete=models.DO_NOTHING)
 
     class Meta:
@@ -144,12 +146,12 @@ class Scores(models.Model):
 
 
 class User(AbstractUser):
-    email = models.CharField(max_length=200, unique=True)
-    phone = models.CharField(max_length=50)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    age = models.PositiveIntegerField()
-    region = models.CharField(max_length=100)
+    email = models.EmailField(max_length=200, unique=True, verbose_name="Email")
+    phone = models.CharField(max_length=50, verbose_name="Phone number")
+    first_name = models.CharField(max_length=50, verbose_name="First name")
+    last_name = models.CharField(max_length=50, verbose_name="Last name")
+    age = models.PositiveIntegerField(blank=True, verbose_name="Age")
+    region = models.CharField(max_length=100, blank=True, verbose_name="Region")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['phone', 'first_name', 'last_name']

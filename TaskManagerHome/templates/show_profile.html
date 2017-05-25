@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+{% block title %}
+    Просмотр профиля
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="/static/css/hot_and_failed.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+{% endblock %}
+
+{% block content %}
+    <h3>Профиль пользователя {{ values.first_name }} {{ values.last_name }}</h3>
+    <table class="inner_table">
+        <thead>
+            <th></th>
+            <th></th>
+        </thead>
+        <tbody>
+            {% for key, value in values.items %}
+            <tr>
+                <td>{{ key }}</td>
+                <td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'edit_profile' %}">Изменить</a>
+{% endblock %}

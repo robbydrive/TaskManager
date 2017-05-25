@@ -11,5 +11,10 @@ urlpatterns = [
     url(r'^add_roadmap/$', views.add_roadmap, name='add_roadmap'),
     url(r'^delete_roadmap/(?P<roadmap_id>.+)/$', views.delete_roadmap, name='delete_roadmap'),
     url(r'^hot$', views.get_hot_tasks, name='hot'),
-    url(r'^stat/(?P<roadmap_id>.*)/$', views.stat, name='roadmap_stat')
+    url(r'^stat/(?P<roadmap_id>.*)/$', views.stat, name='roadmap_stat'),
+    url(r'^signup$', views.sign_up, name='signup'),
+    url(r'^signin$', views.sign_in, name='signin'),
+    url(r'^logout$', views.logout, name='logout'),
+    url(r'^profile$', views.profile, name='profile'),
+    url(r'^edit_profile', views.edit_profile, name='edit_profile')
 ]

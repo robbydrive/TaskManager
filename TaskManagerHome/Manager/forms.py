@@ -1,7 +1,8 @@
 from datetime import date
 import re
 from Manager import models
-from django.forms import ModelForm, widgets, ModelChoiceField
+from django.forms import ModelForm, widgets
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
 
 
@@ -66,3 +67,27 @@ class RoadmapAddForm(ModelForm):
     class Meta:
         model = models.Roadmap
         fields = ['title']
+
+
+class CustomUserCreationForm(UserCreationForm):
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', None)
+        if not email or models.User.objects.filter(email=email).exists():
+            raise ValidationError("Wrong email - probably it is already in use")
+        return email
+
+    def save(self, commit=True):
+        self.instance.username = self.instance.email
+        return super(CustomUserCreationForm, self).save(commit)
+
+    class Meta:
+        model = models.User
+        fields = UserCreationForm.Meta.fields + ('email', 'phone', 'first_name', 'last_name', 'age', 'region',)
+        exclude = ('username',)
+
+
+class CustomAuthenticationForm(AuthenticationForm):
+
+    class Meta:
+        model = models.User

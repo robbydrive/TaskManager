@@ -1,8 +1,6 @@
-{% extends "main.html" %}
-{% load static %}
-
+{% extends 'main.html' %}
 {% block title %}
-    Создать дорожную карту
+    Вход
 {% endblock %}
 
 {% block styles %}
@@ -10,20 +8,18 @@
 {% endblock %}
 
 {% block content %}
-    <form action="{% url 'add_roadmap' %}" method="post" class="form main_form">
+    <form action="{% url 'signin' %}" method="POST" class="form main_form">
         {% csrf_token %}
         <div class="form_title">
-            Создание дорожной карты
+            Аутентификация
         </div>
         <div class="form_input">
-            {% for field in form.visible_fields %}
+        {% for field in form.visible_fields %}
             <h3>{{ field.label }}</h3>
             {{ field }} {{ field.errors | join:"; " }}
         {% endfor %}
         </div>
         <br>
-        <button class="form_button" type="submit">Сохранить</button>
-        <br>
+        <button class="form_button" type="submit">Войти</button>
     </form>
-    <br>
 {% endblock %}

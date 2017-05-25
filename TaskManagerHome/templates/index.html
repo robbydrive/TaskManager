@@ -18,8 +18,8 @@
             Успей всё
     </h2>
     <div id="btnContainer" class="showIt">
-        <a class="btn" href="#">Вход</a>
-        <a class="btn" href="#">Регистрация</a>
+        <a class="btn" href="{% url 'signin' %}">Вход</a>
+        <a class="btn" href="{% url 'signup' %}">Регистрация</a>
         <a class="btn" href="{% url 'hot' %}">Без регистрации и смс</a>
     </div>
 </body>
