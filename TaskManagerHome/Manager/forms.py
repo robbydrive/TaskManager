@@ -20,6 +20,11 @@ class TaskCreateForm(ModelForm):
             raise ValidationError('Date is in the past', code="Past date")
         return value
 
+    def save(self, user, commit=True):
+        instance = self.instance
+        instance.user = user
+        return super(ModelForm, self).save(commit=commit)
+
     class Meta:
         model = models.Task
         fields = ['title', 'estimate', 'roadmap']
@@ -63,6 +68,11 @@ class RoadmapAddForm(ModelForm):
         if value is None or not re.sub(r'\s', r'', value):
             raise ValidationError('Title can not be empty', code="Empty title")
         return value
+
+    def save(self, user, commit=True):
+        instance = self.instance
+        instance.user = user
+        return super(RoadmapAddForm, self).save(commit=commit)
 
     class Meta:
         model = models.Roadmap
