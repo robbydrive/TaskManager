@@ -49,16 +49,19 @@ def add_task(request, roadmap_id=None):
 
 @login_required()
 def edit_task(request, task_id):
+    user = get_user(request)
     try:
-        task_to_edit = Task.objects.filter(user=get_user(request)).get(pk=task_id)
+        task_to_edit = Task.objects.filter(user=user).get(pk=task_id)
     except Task.DoesNotExist:
         return Http404("Wrong task_id for edit task")
     if request.method == 'POST':
         form = TaskEditForm(request.POST, instance=task_to_edit)
-        if form.is_valid() and form.cleaned_data['state'] == READY:
+        if form.is_valid() and form.cleaned_data['state'] == READY and task_to_edit.roadmap.user == user:
             form.instance.ready()
-        elif form.is_valid():
+        elif form.is_valid() and task_to_edit.roadmap.user == user:
             form.save()
+        elif form.is_valid():
+            form.add_error('roadmap', 'Roadmap does not belong to user from task')
     else:
         form = TaskEditForm(instance=task_to_edit)
     return render(request, 'task_edit_form.html', {'form': form,

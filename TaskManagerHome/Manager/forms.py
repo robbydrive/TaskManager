@@ -48,6 +48,7 @@ class TaskEditForm(ModelForm):
             raise ValidationError('Wrong state', code="wrong state")
         return value
 
+
     class Meta:
         model = models.Task
         fields = ['title', 'estimate', 'state', 'roadmap']
