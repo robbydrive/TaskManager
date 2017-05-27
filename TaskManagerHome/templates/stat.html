@@ -71,7 +71,7 @@
         {% for line in table2_lines %}
             <tr>
                 <td class="info">
-                    {{ line.month }}
+                    {{ line.year_month|date:"F Y" }}
                 </td>
                 <td class="info">
                     {{ line.points }}

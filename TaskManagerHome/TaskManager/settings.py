@@ -102,8 +102,8 @@ TEST_DATABASES = {
 # Settings for django.contrib.auth
 
 AUTH_USER_MODEL = 'Manager.User'
-LOGIN_URL = '/signin/'
-LOGOUT_URL = '/logout/'
+LOGIN_URL = '/signin'
+LOGOUT_URL = '/logout'
 LOGIN_REDIRECT_URL = '/'
 
 AUTHENTICATION_BACKENDS = (

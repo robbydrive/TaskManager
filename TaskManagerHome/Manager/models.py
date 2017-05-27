@@ -1,18 +1,9 @@
 from datetime import date, timedelta, datetime
-from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.db import models, transaction, IntegrityError
 from django.db.models import Min, Max, Sum, F
-from django.db.models.functions import Coalesce
+from django.db.models.functions import Trunc
 from django.contrib.auth.models import AbstractUser
-
-
-IN_PROGRESS = 'in_progress'
-READY = 'ready'
-CHOICES = (
-    (IN_PROGRESS, 'In progress',),
-    (READY, 'Ready',)
-)
 
 
 class User(AbstractUser):
@@ -43,7 +34,7 @@ class Roadmap(models.Model):
 
     @property
     def today(self):
-        return Task.objects.filter(estimate=date.today(), roadmap=self)
+        return self.tasks.filter(estimate=date.today(), roadmap=self)
 
     @property
     def min_date(self):
@@ -78,7 +69,7 @@ class Roadmap(models.Model):
                 'end_date': (current + timedelta(days=6)).strftime("%Y-%m-%d"),
                 'created_count': queryset.filter(created__range=[current, current + timedelta(days=6)]) \
                                          .count(),
-                'finished_count': queryset.filter(state=READY,
+                'finished_count': queryset.filter(state=Task.READY,
                                                   finished__range=[current, current + timedelta(days=6)]) \
                                           .count()
             })
@@ -88,28 +79,26 @@ class Roadmap(models.Model):
 
     @staticmethod
     def points_stat(roadmap_id, user):
-        roadmap = Roadmap.objects.get(user=user, pk=roadmap_id)
-        min_date = roadmap.min_date
-        min_date = datetime.strptime(f'{min_date.year}-{min_date.month}-01', '%Y-%m-%d').date()
-        max_date = roadmap.max_date
-        points = []
-        current = min_date
-        while current <= max_date:
-            points.append({
-                'month': current.strftime('%Y-%m'),
-                'points': Scores.objects.filter(task__roadmap=roadmap,
-                                                date__range=[current,
-                                                             current+relativedelta(months=1)-timedelta(days=1)])\
-                                        .aggregate(total_points=Sum(Coalesce('points', 0.0))).get('points__sum', 0.0)
-            })
-            current += relativedelta(months=1)
-        return points
+        months_stat = Scores.objects.filter(task__user=user, task__roadmap=roadmap_id) \
+                               .annotate(year_month=Trunc('date', 'month')) \
+                               .order_by('year_month') \
+                               .values('year_month') \
+                               .annotate(points=Sum('points'))
+        return months_stat
 
     class Meta:
         db_table = 'roadmaps'
 
 
 class Task(models.Model):
+
+    IN_PROGRESS = 'in_progress'
+    READY = 'ready'
+    CHOICES = (
+        (IN_PROGRESS, 'In progress',),
+        (READY, 'Ready',)
+    )
+
     title = models.CharField(max_length=30)
     estimate = models.DateField()
     state = models.CharField(max_length=11, choices=CHOICES, default=IN_PROGRESS, blank=False)
@@ -117,26 +106,20 @@ class Task(models.Model):
                                 on_delete=models.CASCADE,
                                 blank=True,
                                 null=True,
+                                related_name='tasks'
                                )
     created = models.DateField(auto_now_add=True)
     finished = models.DateField(null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="tasks")
 
     def ready(self):
-        if Task.objects.get(pk=self.pk).state != READY:
-            self.state = READY
+        if Task.objects.get(pk=self.pk).state != Task.READY:
+            self.state = Task.READY
             self.finished = date.today()
             try:
                 with transaction.atomic():
                     self.save()
-                    # Formula: (estimate - today + 1) / (estimate - created) * (tasks completed in time in %)
-                    # if task is failed, then division part equals minimum positive number (according to formula)
-                    # code to assign points to user for task
-                    percent = Task.objects.filter(finished__lte=F('estimate')).count() \
-                               / Task.objects.filter(state=READY).count() * 100.0
-                    value = (self.estimate - date.today() + timedelta(days=1))\
-                            / (self.estimate - self.created) * percent
-                    Scores.objects.create(points=value, task=self)
+                    Scores.objects.create(points=self.points_to_accrue, task=self)
                     return True
             except IntegrityError as e:
                 print(e) # TO DO: set up logging
@@ -144,18 +127,34 @@ class Task(models.Model):
         return False
 
     @property
+    def points_to_accrue(self):
+        """
+        Formula: (estimate - today + 1) / (estimate - created) * (tasks completed in time in %)
+        if task is failed, then division part equals minimum positive number (according to formula)
+        code to assign points to user for task
+
+        :return: possible amount of points to add to roadmap account as for today
+        """
+        finished = Task.objects.filter(roadmap=self.roadmap, state=Task.READY).count() \
+                  if Task.objects.filter(roadmap=self.roadmap, state=Task.READY).count() > 0 \
+                  else 1
+        percent = Task.objects.filter(roadmap=self.roadmap, finished__lte=F('estimate')).count() \
+                  / finished * 100.0
+        return (self.estimate - date.today() + timedelta(days=1)) / (self.estimate - self.created) * percent
+
+    @property
     def remaining(self):
-        if self.state == IN_PROGRESS and not self.is_failed:
+        if self.state == Task.IN_PROGRESS and not self.is_failed:
             return self.estimate - date.today()
         return timedelta()
 
     @property
     def is_critical(self):
-        return self.state == IN_PROGRESS and self.remaining.days <= 3 and self.estimate >= date.today()
+        return self.state == Task.IN_PROGRESS and self.remaining.days <= 3 and self.estimate >= date.today()
 
     @property
     def is_failed(self):
-        return self.state == IN_PROGRESS and self.estimate < date.today()
+        return self.state == Task.IN_PROGRESS and self.estimate < date.today()
 
     class Meta:
         db_table = 'tasks'
@@ -165,7 +164,7 @@ class Task(models.Model):
 class Scores(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     points = models.DecimalField(max_digits=10, decimal_places=2)
-    task = models.ForeignKey(Task, on_delete=models.DO_NOTHING)
+    task = models.ForeignKey(Task, on_delete=models.DO_NOTHING, related_name='points')
 
     class Meta:
         db_table = 'scores'

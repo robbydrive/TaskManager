@@ -44,7 +44,7 @@ class TaskEditForm(ModelForm):
 
     def clean_state(self):
         value = self.cleaned_data.get('state')
-        if value is None or value not in (models.IN_PROGRESS, models.READY):
+        if value is None or value not in (models.Task.IN_PROGRESS, models.Task.READY):
             raise ValidationError('Wrong state', code="wrong state")
         return value
 

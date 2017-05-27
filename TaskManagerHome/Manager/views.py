@@ -5,7 +5,7 @@ from django.contrib.auth import login, logout, get_user
 from django.contrib.auth.decorators import login_required
 from Manager.forms import CustomPasswordChangeForm, CustomUserCreationForm, CustomAuthenticationForm, \
     TaskCreateForm, TaskEditForm, RoadmapAddForm, CustomUserEditForm, CustomUserEditCutForm
-from Manager.models import Task, Roadmap, User, READY
+from Manager.models import Task, Roadmap, User
 from social_django.models import UserSocialAuth
 
 
@@ -56,7 +56,7 @@ def edit_task(request, task_id):
         return Http404("Wrong task_id for edit task")
     if request.method == 'POST':
         form = TaskEditForm(request.POST, instance=task_to_edit)
-        if form.is_valid() and form.cleaned_data['state'] == READY and task_to_edit.roadmap.user == user:
+        if form.is_valid() and form.cleaned_data['state'] == Task.READY and task_to_edit.roadmap.user == user:
             form.instance.ready()
         elif form.is_valid() and task_to_edit.roadmap.user == user:
             form.save()
@@ -66,6 +66,7 @@ def edit_task(request, task_id):
         form = TaskEditForm(instance=task_to_edit)
     return render(request, 'task_edit_form.html', {'form': form,
                                                    'task_id': task_id})
+
 
 @login_required()
 def delete_task(request, task_id):
@@ -108,16 +109,17 @@ def get_hot_tasks(request):
     return render(request, 'hot_and_failed.html', {'hot_tasks': hot_tasks,
                                                    'failed_tasks': failed_tasks})
 
+
 @login_required()
 def stat(request, roadmap_id):
     user = get_user(request)
     try:
-        created_and_finished = Roadmap.created_and_finished_stat(roadmap_id, user)
-        points = Roadmap.points_stat(roadmap_id, user)
+        created_and_finished_stat = Roadmap.created_and_finished_stat(roadmap_id, user)
+        points_months_stat = Roadmap.points_stat(roadmap_id, user)
     except ObjectDoesNotExist:
         return Http404("Probably wrong roadmap_id for stat")
-    return render(request, 'stat.html', {'table1_lines': created_and_finished,
-                                         'table2_lines': points})
+    return render(request, 'stat.html', {'table1_lines': created_and_finished_stat,
+                                         'table2_lines': points_months_stat})
 
 
 def sign_up(request):
