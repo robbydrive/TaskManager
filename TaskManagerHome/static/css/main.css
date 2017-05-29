@@ -82,3 +82,19 @@ nav ul{list-style:none}
     -webkit-border-radius: 5px;
     border-radius: 5px;
 }
+
+.success {
+    color: green;
+}
+
+.warning {
+    color: darkorange;
+}
+
+.error {
+    color: red;
+}
+
+.info {
+    color: lightseagreen;
+}

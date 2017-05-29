@@ -24,11 +24,11 @@
         <br>
         <button class="form_button" type="submit">Сохранить</button>
         <br>
-        {% if form.errors|length == 0 and form.is_valid %}
-            <h3>Успех! Вот, что получилось: </h3>
-            <p><span {% if form.instance.is_critical %}class="critical"{% endif %}>Задача: {{ form.cleaned_data.title }}</span></p>
-            <p>Выполнить до {{ form.cleaned_data.estimate }}</p>
-        {% endif %}
+{#        {% if form.errors|length == 0 and form.is_valid %}#}
+{#            <h3>Успех! Вот, что получилось: </h3>#}
+{#            <p><span {% if form.instance.is_critical %}class="critical"{% endif %}>Задача: {{ form.cleaned_data.title }}</span></p>#}
+{#            <p>Выполнить до {{ form.cleaned_data.estimate }}</p>#}
+{#        {% endif %}#}
     </form>
     <br>
 {% endblock %}

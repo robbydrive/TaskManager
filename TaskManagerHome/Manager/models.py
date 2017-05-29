@@ -27,7 +27,8 @@ class User(AbstractUser):
 class Roadmap(models.Model):
     title = models.CharField(max_length=30)
     created = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="roadmaps")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="roadmaps",
+                             null=True, on_delete=models.SET_NULL, )
 
     def __str__(self):
         return self.title
@@ -164,7 +165,7 @@ class Task(models.Model):
 class Scores(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     points = models.DecimalField(max_digits=10, decimal_places=2)
-    task = models.ForeignKey(Task, on_delete=models.DO_NOTHING, related_name='points')
+    task = models.ForeignKey(Task, on_delete=models.SET_NULL, related_name='points', null=True)
 
     class Meta:
         db_table = 'scores'

@@ -93,8 +93,12 @@ DATABASES = {
 
 TEST_DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'test_task_manager',
+        'USER': 'django',
+        'PASSWORD': 'task-manager',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -114,8 +118,8 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-SOCIAL_AUTH_LOGIN_ERROR_URL = '/'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/profile'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/profile'
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 
 SOCIAL_AUTH_GITHUB_KEY = 'e7c2d16cb42dfb6faf34'
